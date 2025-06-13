@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>З Днем народження, мама!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 3em;
+      color: #e91e63;
+      display: none;
+      animation: fadeInOut 5s forwards;
+    }
+    @keyframes fadeInOut {
+      0% {opacity: 0; transform: scale(0.8);}
+      10% {opacity: 1; transform: scale(1);}
+      90% {opacity: 1;}
+      100% {opacity: 0;}
+    }
+    #startBtn {
+      padding: 1em 2em;
+      font-size: 1.5em;
+      background-color: #ff4081;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #startBtn:hover {
+      transform: scale(1.05);
+    }
+    .slideshow {
+      display: none;
+      max-width: 90vw;
+      max-height: 80vh;
+    }
+    .slideshow img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <button id="startBtn">Натисни сюрприз!</button>
+  <h1 id="greeting">З Днем народження, мама!</h1>
+  <div class="slideshow">
+    <img id="slide" src="" alt="Фото">
+  </div>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const greeting = document.getElementById('greeting');
+    const slideshow = document.querySelector('.slideshow');
+    const slide = document.getElementById('slide');
+
+    const images = [
+      "img/p0.jpg",
+      "img/p1.jpg",
+      "img/p2.jpg",
+      "img/p3.jpg",
+      "img/p4.jpg",
+      "img/p45.jpg",
+      "img/p6.jpg",
+      "img/p7.jpg",
+      "img/p9.jpg",
+      "img/p11.jpg"
+    ];
+
+    let current = 0;
+
+    startBtn.addEventListener('click', () => {
+      startBtn.style.display = 'none';
+      greeting.style.display = 'block';
+      launchConfetti();
+
+      setTimeout(() => {
+        greeting.style.display = 'none';
+        startSlideshow();
+      }, 5000);
+    });
+
+    function startSlideshow() {
+      slideshow.style.display = 'block';
+      slide.src = images[current];
+      setInterval(() => {
+        current = (current + 1) % images.length;
+        slide.src = images[current];
+      }, 3000);
+    }
+    const canvas = document.getElementById("confetti-canvas");
+    const ctx = canvas.getContext("2d");
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+  const particles = [];
+
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H - H,
+      size: Math.random() * 6 + 4,
+      speed: Math.random() * 2 + 1,
+      color: `hsl(${Math.random() * 360}, 100%, 50%)`
+    });
+  }
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+      p.y += p.speed;
+
+      if (p.y > H) {
+        p.y = -10;
+        p.x = Math.random() * W;
+      }
+    }
+    requestAnimationFrame(drawConfetti);
+  }
+
+  function launchConfetti() {
+    drawConfetti();
+  }
+</script>
+
+</body>
+</html>
